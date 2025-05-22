@@ -1,0 +1,98 @@
+# Upstream clusters (Mapped from Envoy's clusters)
+# Each upstream corresponds to an Envoy cluster
+
+upstream opentelemetry_collector_grpc {
+    server ${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_GRPC};
+}
+
+upstream opentelemetry_collector_http {
+    server ${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP};
+}
+
+upstream frontend {
+    server ${FRONTEND_HOST}:${FRONTEND_PORT};
+}
+
+upstream image_provider {
+    server ${IMAGE_PROVIDER_HOST}:${IMAGE_PROVIDER_PORT};
+}
+
+upstream flagservice {
+    server ${FLAGD_HOST}:${FLAGD_PORT};
+}
+
+upstream flagd_ui {
+    server ${FLAGD_UI_HOST}:${FLAGD_UI_PORT};
+}
+
+upstream loadgen {
+    server ${LOCUST_WEB_HOST}:${LOCUST_WEB_PORT};
+}
+
+upstream grafana {
+    server ${GRAFANA_HOST}:${GRAFANA_PORT};
+}
+
+upstream jaeger {
+    server ${JAEGER_HOST}:${JAEGER_PORT};
+}
+
+# Server block (Mapped from Envoy's listener)
+server {
+    listen ${ENVOY_PORT};
+    server_name _;
+
+    # Route mappings (Mapped from Envoy's virtual_hosts and routes)
+    location /loadgen {
+        proxy_pass http://loadgen/;
+    }
+
+    location /otlp-http/ {
+        proxy_pass http://opentelemetry_collector_http/;
+    }
+
+    location /jaeger {
+        proxy_pass http://jaeger/;
+    }
+
+    location /grafana {
+        proxy_pass http://grafana/;
+    }
+
+    location /images/ {
+        proxy_pass http://image_provider/;
+    }
+
+    location /flagservice/ {
+        proxy_pass http://flagservice/;
+    }
+
+    location /feature {
+        proxy_pass http://flagd_ui;
+    }
+
+    location / {
+        proxy_pass http://frontend;
+    }
+
+    # Fault injection (Natively unsupported in NGINX, requires the `ngx_http_fantasy` or similar module)
+    # Uncomment the lines below if using a fault injection module
+    # location /some/path {
+    #     proxy_pass http://some_upstream;
+    #     fault_inject delay 500ms; # Example delay
+    # }
+
+    # Access logging
+    # You can customize NGINX's logging format to emulate OpenTelemetry's structured logging
+    log_format otel_access_log '$remote_addr - $remote_user [$time_local] '
+                              '"$request" $status $body_bytes_sent '
+                              '"$http_referer" "$http_user_agent" '
+                              '$upstream_addr $request_time $upstream_response_time';
+
+    access_log /var/log/nginx/access.log otel_access_log;
+
+    # Other configurations such as timeouts and error handling
+    proxy_connect_timeout 5s;
+    proxy_read_timeout 5s;
+    proxy_send_timeout 5s;
+}

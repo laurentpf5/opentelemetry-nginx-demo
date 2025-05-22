@@ -244,11 +244,13 @@ services:
 
   # Frontend Proxy (Envoy)
   frontend-proxy:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-frontend-proxy
+    # image: ${IMAGE_NAME}:${DEMO_VERSION}-frontend-proxy
+    image: frontend-proxy #NGINX Configuration
     container_name: frontend-proxy
     build:
       context: ./
-      dockerfile: ${FRONTEND_PROXY_DOCKERFILE}
+      # dockerfile: ${FRONTEND_PROXY_DOCKERFILE} # Envoy
+      dockerfile: ./src/nginx-frontend-proxy/Dockerfile # nginx
     deploy:
       resources:
         limits:
