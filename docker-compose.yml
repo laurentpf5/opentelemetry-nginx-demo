@@ -318,18 +318,21 @@ services:
 
   # Frontend Proxy (Envoy)
   frontend-proxy:
-    image: ${IMAGE_NAME}:${DEMO_VERSION}-frontend-proxy
+    # image: ${IMAGE_NAME}:${DEMO_VERSION}-frontend-proxy # Default Envoy Proxy
+    image: ${DEMO_VERSION}-frontend-proxy
+    # image: frontend-proxy #NGINX Version of the proxy
     container_name: frontend-proxy
     build:
       context: ./
       dockerfile: ${FRONTEND_PROXY_DOCKERFILE}
+      # dockerfile: ./src/nginx-frontend-proxy/Dockerfile #NGINX Proxy instead of Envoy
     deploy:
       resources:
         limits:
           memory: 65M
     restart: unless-stopped
     ports:
-      - "${ENVOY_PORT}:${ENVOY_PORT}"
+      - "${NGINX_PORT}:${NGINX_PORT}"
       - 10000:10000
     environment:
       - FRONTEND_PORT
@@ -347,7 +350,7 @@ services:
       - OTEL_COLLECTOR_PORT_HTTP
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_SERVICE_NAME=frontend-proxy
-      - ENVOY_PORT
+      - NGINX_PORT
       - FLAGD_HOST
       - FLAGD_PORT
       - FLAGD_UI_HOST
@@ -762,7 +765,7 @@ services:
         condition: service_healthy
     logging: *logging
     environment:
-      - ENVOY_PORT
+      - NGINX_PORT
       - HOST_FILESYSTEM
       - OTEL_COLLECTOR_HOST
       - OTEL_COLLECTOR_PORT_GRPC
