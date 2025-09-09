@@ -19,3 +19,14 @@ otlp:
 storage:
   tsdb:
     out_of_order_time_window: 30m
+
+scrape_configs:
+  - job_name: nginxplus-target
+    honor_timestamps: true
+    scrape_interval: 5s
+    scrape_timeout: 5s
+    metrics_path: /metrics
+    scheme: http
+    follow_redirects: true
+    static_configs:
+    - targets: ['frontend-proxy:8091']

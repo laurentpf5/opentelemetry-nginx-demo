@@ -1,0 +1,13 @@
+server {
+
+    listen       8091;
+    
+    location /nginx_status {
+        stub_status;
+        allow all;
+        # deny all;
+    }
+    location = /metrics {
+        stub_status;
+    }
+}

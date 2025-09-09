@@ -1,0 +1,24 @@
+server {
+
+    listen       8091;
+
+        location /api {
+        api write=on;
+        allow all;
+    }
+    location /nginx_status {
+        stub_status;
+        allow all;
+        # deny all;
+    }
+    location / {
+    root /usr/share/nginx/html;
+    index   dashboard.html;
+    }
+    location = /dashboard.html {
+        root /usr/share/nginx/html;
+    }
+    location = /metrics {
+        js_content prometheus.metrics;
+    }
+}
