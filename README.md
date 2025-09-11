@@ -12,6 +12,21 @@
 
 ## Welcome to the OpenTelemetry Astronomy Shop Demo with NGINX Proxy
 This is simple copy of the OpenTelemetry demo quickly hacked to replace the envoy proxy with nginx proxy. Everything else stays the same.
+To run NGINX Open Source, simply issue the following command :
+```shell
+$ cd src/nginx-frontend-proxy/
+$ cp Dockerfil.oss Dockerfile
+```
+To run NGINX+, you must get a valid license (trial) in the form of a 'license.jwt' file. Then issue the following commands :
+```shell
+$ cd src/nginx-frontend-proxy/
+$ cp Dockerfil.nplus Dockerfile
+```
+Now to build the frontend-proxy image with NGINX, issue the following: 
+```shell
+$ docker build -f src/nginx-frontend-proxy/Dockerfile -t latest-frontend-proxy . 
+```
+
 
 ## Quick start
 
