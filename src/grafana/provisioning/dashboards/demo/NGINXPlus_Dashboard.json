@@ -57,7 +57,7 @@
         "target": {
           "limit": 100,
           "matchAny": false,
-          "tags": [],
+          "tags": ["NGINX Plus"],
           "type": "dashboard"
         },
         "type": "dashboard"
