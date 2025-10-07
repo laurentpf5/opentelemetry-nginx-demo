@@ -59,7 +59,7 @@ $ cp Dockerfil.nplus Dockerfile
 ```
 Now to build the frontend-proxy image with NGINX, issue the following: 
 ```shell
-$ docker build -f src/nginx-frontend-proxy/Dockerfile -t latest-frontend-proxy . 
+$ docker build -f src/nginx-frontend-proxy/Dockerfile -t ghcr.io/open-telemetry/demo:latest-frontend-proxy . 
 ```
 ## Documentation
 
