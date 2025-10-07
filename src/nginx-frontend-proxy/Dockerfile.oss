@@ -8,5 +8,11 @@ COPY ./src/nginx-frontend-proxy/dashboard.conf.oss /etc/nginx/conf.d/dasboard.co
 COPY ./src/nginx-frontend-proxy/nginx-proxy.conf /etc/nginx/conf.d/nginx-proxy.conf
 COPY ./src/nginx-frontend-proxy/nginx.conf.oss /etc/nginx/nginx.conf
 
+# COPY ./src/nginx-frontend-proxy/nginx-proxy.conf.yml /etc/nginx/conf.d/nginx-proxy.conf.yml    
+# RUN apt install gettext-base -y
+# RUN envsubst < /etc/nginx/conf.d/nginx-proxy.conf.yml > /etc/nginx/conf.d/nginx-proxy.conf.yml.tmp && mv /etc/nginx/conf.d/nginx-proxy.conf.yml.tmp /etc/nginx/conf.d/nginx-proxy.conf
 
+
+# EXPOSE ${NGINX_PORT}
+# EXPOSE ${NGINX_ADMIN_PORT}
 CMD ["nginx", "-g", "daemon off;"]
